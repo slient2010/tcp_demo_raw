@@ -20,9 +20,15 @@ fn handle_connection(stream: TcpStream) -> io::Result<()> {
     let peer_addr = stream.peer_addr().expect("Stream has peer_addr");
     eprintln!("Incoming from {}", peer_addr);
     let mut reader = BufReader::new(stream.try_clone()?);
+
     let mut writer = BufWriter::new(stream);
+
     loop {
         let message = extract_string_buffered(&mut reader)?;
+        // println!("message from client: {}", message);
+        if message.len() == 0 {
+            break Ok(());
+        }
         write_data(&mut writer, &message.as_bytes())?;
     }
 }

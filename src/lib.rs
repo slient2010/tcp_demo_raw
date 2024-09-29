@@ -2,8 +2,15 @@
 
 use std::io::{self, BufRead};
 
-pub const DEFAULT_SERVER_ADDR: &str = "127.0.0.1:4001";
+pub const DEFAULT_SERVER_ADDR: &str = "127.0.0.1:4000";
 const MESSAGE_BUFFER_SIZE: usize = 32;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
+pub struct MyMsg {
+    pub client_id: i32,
+    pub client_msg: String,
+}
 
 /// Given a buffer (in this case, TcpStream), write the bytes
 /// to be transmitted via TCP

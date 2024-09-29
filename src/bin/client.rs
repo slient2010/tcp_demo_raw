@@ -4,7 +4,7 @@ use std::net::{SocketAddr, TcpStream};
 
 use structopt::StructOpt;
 
-use tcp_demo_raw::{extract_string_unbuffered, write_data, DEFAULT_SERVER_ADDR};
+use tcp_demo_raw::{extract_string_unbuffered, write_data, MyMsg, DEFAULT_SERVER_ADDR};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "client")]
@@ -19,7 +19,21 @@ fn main() -> io::Result<()> {
     let args = Args::from_args();
 
     let mut stream = TcpStream::connect(args.addr)?;
+
     let send_server = &args.message.as_bytes();
+
+    /*** send struct to server start */
+    let send_to_server = MyMsg {
+        client_id: 1,
+        client_msg: String::from("hello"),
+    };
+
+    let send_to_server = serde_json::to_string(&send_to_server);
+
+    let send_to_server = format!("{:?}", send_to_server);
+    let send_server = send_to_server.as_bytes();
+    /*** send struct to server start */
+
     loop {
         write_data(&mut stream, send_server)?;
 
